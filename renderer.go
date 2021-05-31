@@ -1,9 +1,13 @@
 package main
 
-import cw "duskerscli/console_wrapper"
+import (
+	cw "duskerscli/console_wrapper"
+	"strconv"
+)
 
 type renderer struct {
 	roomSizeX, roomSizeY int // WITH walls!
+	drawCoords           bool
 }
 
 func initRenderer() *renderer {
@@ -11,19 +15,34 @@ func initRenderer() *renderer {
 	return &renderer{
 		roomSizeX: 6,
 		roomSizeY: 4,
+		drawCoords: true,
 	}
 }
 
 func (r *renderer) render(l *level) {
 	cw.Clear_console()
-	cw.SetBgColor(cw.DARK_GRAY)
+	r.renderLevelOutline(l)
+	r.renderLevel(l)
+	cw.SetFgColor(cw.WHITE)
+}
+
+func (r *renderer) renderLevelOutline(l *level) {
+	cw.SetColor(cw.BLACK, cw.DARK_GRAY)
 	for x := 0; x <= r.roomSizeX*len(l.rooms); x++ {
 		for y := 0; y <= r.roomSizeY*len(l.rooms[1]); y++ {
-			cw.PutChar(' ', x, y)
+			chr := ' '
+			if x % (r.roomSizeX) == r.roomSizeX/2 {
+				value := 'A' + (x - r.roomSizeX/2)/r.roomSizeX
+				chr = rune(value)
+			}
+			if y % (r.roomSizeY) == r.roomSizeY/2 {
+				chr = rune((strconv.Itoa((y - r.roomSizeY/2)/r.roomSizeY))[0])
+			}
+			// roomCentY := upy + r.roomSizeY/2 - 1
+			cw.PutChar(chr, x, y)
 		}
 	}
 	cw.SetBgColor(cw.BLACK)
-	r.renderLevel(l)
 }
 
 func (r *renderer) renderLevel(l *level) {
@@ -36,10 +55,10 @@ func (r *renderer) renderLevel(l *level) {
 
 func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	room := l.rooms[rx][ry]
-	upx := 1+rx*r.roomSizeX
-	upy := 1+ry*r.roomSizeY
-	roomInnerSizeX := r.roomSizeX-1
-	roomInnerSizeY := r.roomSizeY-1
+	upx := 1 + rx*r.roomSizeX
+	upy := 1 + ry*r.roomSizeY
+	roomInnerSizeX := r.roomSizeX - 1
+	roomInnerSizeY := r.roomSizeY - 1
 	// render room itself
 	for x := 0; x < roomInnerSizeX; x++ {
 		for y := 0; y < roomInnerSizeY; y++ {
@@ -47,8 +66,8 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 		}
 	}
 	// render connections
-	roomCentX := upx + r.roomSizeX/2-1
-	roomCentY := upy + r.roomSizeY/2-1
+	roomCentX := upx + r.roomSizeX/2 - 1
+	roomCentY := upy + r.roomSizeY/2 - 1
 	cw.SetFgColor(cw.DARK_MAGENTA)
 	for _, c := range room.conns {
 		if c != nil {
@@ -66,7 +85,7 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	actorsHere := l.getAllActorsAtCoords(rx, ry)
 	playersActors := 0
 	enemiesActors := 0
-	for _, a := range actorsHere{
+	for _, a := range actorsHere {
 		if a.isPlayerControlled {
 			cw.SetFgColor(cw.DARK_GREEN)
 			cw.PutChar(a.getStaticData().char, upx+playersActors, upy)

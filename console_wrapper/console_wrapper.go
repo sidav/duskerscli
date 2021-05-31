@@ -287,3 +287,29 @@ func PrintCharactersTable() {
 	Flush_console()
 	ReadKey()
 }
+
+// reads current key, appends it to currLine (which is rendered at linex, liney) and returns both the line and keypress.
+func ReadTextInputAndKeyPress(promptline string, currLine string, linex, liney int) (string, string) {
+	key := ""
+	PutString(promptline, linex, liney)
+	Flush_console()
+	key = ReadKey()
+	for i := 0; i <= len(promptline)+len(currLine); i++ {
+		PutChar(' ', linex+i, liney)
+	}
+	if key == "BACKSPACE" {
+		if len(currLine) > 0 {
+			currLine = currLine[:len(currLine)-1]
+		}
+	}
+	if len(key) == 1 {
+		if key == " " && len(currLine) == 0 {
+
+		} else {
+			currLine += key
+		}
+	}
+	PutString(promptline+currLine+"_", linex, liney)
+	Flush_console()
+	return currLine, key
+}
