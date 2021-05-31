@@ -179,6 +179,8 @@ func ReadKeyAsync() string { // also reads mouse events... TODO: think of if sep
 
 func eventToKeyString(ev *tcell.EventKey) string {
 	switch ev.Key() {
+	case tcell.KeyCtrlC:
+		return "CTRL+C"
 	case tcell.KeyUp:
 		return "UP"
 	case tcell.KeyRight:

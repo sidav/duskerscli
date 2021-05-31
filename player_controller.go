@@ -22,7 +22,7 @@ func (p *playerController) parsePlayerInput(inputString string) {
 			return
 		}
 		trx, try := p.strToRoomCoords(splitted[2])
-		if trx*try < 0 {
+		if trx < 0 {
 			return
 		}
 		actor.currOrder = &order{
@@ -37,5 +37,8 @@ func (p *playerController) parsePlayerInput(inputString string) {
 }
 
 func (p *playerController) strToRoomCoords(s string) (int, int) {
-	return int("a"[0] - s[0]), int("0"[0] - s[1])
+	if len(s) != 2 {
+		return -1, -1
+	}
+	return int(s[0] - "a"[0]), int(s[1] - "0"[0])
 }

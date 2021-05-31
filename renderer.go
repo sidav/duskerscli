@@ -2,14 +2,16 @@ package main
 
 import (
 	cw "duskerscli/console_wrapper"
+	"fmt"
 	"strconv"
 )
 
 type renderer struct {
-	roomSizeX, roomSizeY   int // WITH walls!
-	logPosition, logHeight int
-	drawCoords             bool
-	inputLinePosition      int
+	roomSizeX, roomSizeY    int // WITH walls!
+	logYPosition, logHeight int
+	drawCoords              bool
+	inputLineYPosition      int
+	statusXPosition         int
 }
 
 func initRenderer() *renderer {
@@ -20,8 +22,9 @@ func initRenderer() *renderer {
 		logHeight:  3,
 		drawCoords: true,
 	}
-	r.logPosition = 4*r.roomSizeY + 1
-	r.inputLinePosition = r.logPosition+1
+	r.logYPosition = r.logHeight + r.roomSizeY*4
+	r.inputLineYPosition = r.logYPosition + 1
+	r.statusXPosition = 1 + r.roomSizeX*4
 	return r
 }
 
@@ -29,6 +32,7 @@ func (r *renderer) render(l *level) {
 	cw.Clear_console()
 	r.renderLevelOutline(l)
 	r.renderLevel(l)
+	r.renderPlayerStatus(l)
 	r.renderLog(l)
 	cw.SetFgColor(cw.WHITE)
 }
@@ -106,16 +110,33 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	}
 }
 
+func (r *renderer) renderPlayerStatus(l *level) {
+	cw.SetFgColor(cw.WHITE)
+	cw.PutString(fmt.Sprintf("Turn %d", l.currentTurnNumber), r.statusXPosition, 0)
+	currY := 1
+	for _, a := range l.actors {
+		if a.isPlayerControlled {
+			cw.PutString(fmt.Sprintf("%s: %s", a.getStaticData().defaultName, a.name),
+				r.statusXPosition, currY)
+			currY++
+		}
+	}
+}
+
 func (r *renderer) renderLog(l *level) {
 	cw.SetFgColor(cw.WHITE)
-	cw.PutString(l.currLog, 0, r.logPosition)
+	cw.PutString(l.currLog, 0, r.logYPosition)
 }
 
 func (r *renderer) readPlayerInput() string {
 	currLine := ""
 	key := ""
 	for key != "ENTER" {
-		currLine, key = cw.ReadTextInputAndKeyPress("> ", currLine, 0, r.inputLinePosition)
+		currLine, key = cw.ReadTextInputAndKeyPress("> ", currLine, 0, r.inputLineYPosition)
+		if key == "CTRL+C" {
+			abortGame = true
+			return "exit"
+		}
 	}
 	return currLine
 }
