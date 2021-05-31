@@ -7,32 +7,34 @@ func initLevel() *level {
 	for i := range(lvl.rooms) {
 		lvl.rooms[i] = make([]*room, LEVELSIZE)
 		for j := range lvl.rooms[i] {
-			lvl.rooms[i][j] = &room{
-				name:       "",
-				isExplored: false,
-				isSeen:     false,
-				conns:      [2]*connection{},
-			}
-			if i < LEVELSIZE-1 {
-				lvl.rooms[i][j].conns[0] = &connection{
-					rcx:       1,
-					rcy:       0,
-					isDoor:    true,
-					lockLevel: 0,
-					isOpened:  false,
-					isBroken:  false,
-					isLocked:  false,
+			if !rnd.OneChanceFrom(0) {
+				lvl.rooms[i][j] = &room{
+					name:       "",
+					isExplored: false,
+					isSeen:     false,
+					conns:      [2]*connection{},
 				}
-			}
-			if j < LEVELSIZE-1 {
-				lvl.rooms[i][j].conns[1] = &connection{
-					rcx:       0,
-					rcy:       1,
-					isDoor:    true,
-					lockLevel: 0,
-					isOpened:  false,
-					isBroken:  false,
-					isLocked:  false,
+				if i < LEVELSIZE-1 && !rnd.OneChanceFrom(6) {
+					lvl.rooms[i][j].conns[0] = &connection{
+						rcx:       1,
+						rcy:       0,
+						isDoor:    true,
+						lockLevel: 0,
+						isOpened:  rnd.OneChanceFrom(4),
+						isBroken:  false,
+						isLocked:  false,
+					}
+				}
+				if j < LEVELSIZE-1 && !rnd.OneChanceFrom(6) {
+					lvl.rooms[i][j].conns[1] = &connection{
+						rcx:       0,
+						rcy:       1,
+						isDoor:    true,
+						lockLevel: 0,
+						isOpened:  rnd.OneChanceFrom(4),
+						isBroken:  false,
+						isLocked:  false,
+					}
 				}
 			}
 		}

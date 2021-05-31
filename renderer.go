@@ -55,6 +55,9 @@ func (r *renderer) renderLevel(l *level) {
 
 func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	room := l.rooms[rx][ry]
+	if room == nil {
+		return
+	}
 	upx := 1 + rx*r.roomSizeX
 	upy := 1 + ry*r.roomSizeY
 	roomInnerSizeX := r.roomSizeX - 1
@@ -95,3 +98,5 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 		}
 	}
 }
+
+

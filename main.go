@@ -1,13 +1,21 @@
 package main
 
-import "duskerscli/console_wrapper"
+import (
+	"duskerscli/console_wrapper"
+	"duskerscli/fibrandom"
+)
+
+var (
+	rnd, auxrnd fibrandom.FibRandom
+	abortGame bool
+)
 
 func main() {
-	lvl := initLevel()
-	rend := initRenderer()
-	rend.render(lvl)
-	p := playerController{}
-	p.readPlayerInput()
+	rnd.InitDefault()
+	auxrnd.InitDefault()
+
+	g := game{}
+	g.gameLoop()
 
 	defer console_wrapper.Close_console()
 }
