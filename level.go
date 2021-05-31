@@ -1,8 +1,11 @@
 package main
 
+import "fmt"
+
 type level struct {
-	rooms [][]*room
+	rooms  [][]*room
 	actors []*actor
+	currLog    string
 }
 
 func (l *level) getAllActorsAtCoords(x, y int) []*actor {
@@ -13,4 +16,21 @@ func (l *level) getAllActorsAtCoords(x, y int) []*actor {
 		}
 	}
 	return actsHere
+}
+
+func (l *level) getActorByName(name string) *actor {
+	for _, a := range l.actors {
+		if a.name == name {
+			return a
+		}
+	}
+	return nil
+}
+
+func (l *level) setLogMessage(msg string, args ...interface{}) {
+	l.currLog = fmt.Sprintf(msg, args...)
+}
+
+func (l *level) appendToLogMessage(msg string, args ...interface{}) {
+	l.currLog += fmt.Sprintf(" "+msg, args...)
 }

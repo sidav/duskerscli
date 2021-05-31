@@ -6,8 +6,10 @@ import (
 )
 
 var (
+	rend        *renderer
 	rnd, auxrnd fibrandom.FibRandom
-	abortGame bool
+	abortGame   bool
+	CURR_LEVEL  *level
 )
 
 func main() {

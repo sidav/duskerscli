@@ -41,6 +41,7 @@ func initLevel() *level {
 	}
 
 	lvl.actors = append(lvl.actors, &actor{
+		name: "alpha",
 		staticId: ACTOR_DRONE,
 		hp: 5,
 		x:  0,
