@@ -114,7 +114,8 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 
 func (r *renderer) renderPlayerStatus(l *level) {
 	cw.SetFgColor(cw.WHITE)
-	cw.PutString(fmt.Sprintf("Turn %d", l.currentTurnNumber), r.statusXPosition, 0)
+	cw.PutString(fmt.Sprintf("Turn %d.%d", l.currentTurnNumber/10, l.currentTurnNumber%10),
+		r.statusXPosition, 0)
 	currY := 1
 	for _, a := range l.actors {
 		if a.isPlayerControlled {

@@ -44,7 +44,8 @@ func (l *level) appendToLogMessage(msg string, args ...interface{}) {
 }
 
 func (l *level) canActorMoveByVector(a *actor, vx, vy int) bool {
-	return l.getConnFromRoomByVector(a.x, a.y, vx, vy) != nil
+	conn := l.getConnFromRoomByVector(a.x, a.y, vx, vy)
+	return conn != nil && conn.isOpened
 }
 
 func (l *level) moveActorByVector(a *actor, vx, vy int) {
