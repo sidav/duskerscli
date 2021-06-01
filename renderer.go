@@ -47,7 +47,7 @@ func (r *renderer) renderLevelOutline(l *level) {
 				chr = rune(value)
 			}
 			if y%(r.roomSizeY) == r.roomSizeY/2 {
-				chr = rune((strconv.Itoa((y - r.roomSizeY/2) / r.roomSizeY))[0])
+				chr = rune((strconv.Itoa((y - r.roomSizeY/2) / r.roomSizeY + 1))[0])
 			}
 			// roomCentY := upy + r.roomSizeY/2 - 1
 			cw.PutChar(chr, x, y)

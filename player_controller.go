@@ -40,5 +40,5 @@ func (p *playerController) strToRoomCoords(s string) (int, int) {
 	if len(s) != 2 {
 		return -1, -1
 	}
-	return int(s[0] - "a"[0]), int(s[1] - "0"[0])
+	return int(s[0] - "a"[0]), int(s[1] - "0"[0] - 1)
 }

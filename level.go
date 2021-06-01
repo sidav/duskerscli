@@ -63,6 +63,9 @@ func (l *level) getConnFromRoomByVector(x, y, vx, vy int) *connection {
 		vy = -vy
 		y--
 	}
+	if x < 0 || x >= len(l.rooms) || y < 0 || y >= len(l.rooms[0]) {
+		return nil
+	}
 	room := l.rooms[x][y]
 	if room == nil {
 		return nil
@@ -80,23 +83,4 @@ func (l *level) getConnFromRoomByVector(x, y, vx, vy int) *connection {
 
 func (l *level) getConnBetweenRoomsAtCoords(x1, y1, x2, y2 int) *connection {
 	return l.getConnFromRoomByVector(x1, y1, x2-x1, y2-y1)
-	//diffX := x1 - x2
-	//diffY := y1 - y2
-	//dist := euclideanDistance(x1, y1, x2, y2)
-	//if dist == 0 || dist > 1 {
-	//	return nil
-	//}
-	//neededRoom := l.rooms[x1][y1]
-	//if x1 > x2 || y1 > y2 {
-	//	neededRoom = l.rooms[x2][y2]
-	//}
-	//for _, c := range neededRoom.conns {
-	//	if c == nil {
-	//		continue
-	//	}
-	//	if c.rcx == abs(diffX) && c.rcy == abs(diffY) {
-	//		return c
-	//	}
-	//}
-	//return nil
 }

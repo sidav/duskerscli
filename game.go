@@ -8,7 +8,11 @@ func (g *game) gameLoop() {
 	rend = initRenderer()
 	for !abortGame {
 		for _, a := range CURR_LEVEL.actors {
-			a.executeOrder()
+			if a.isPlayerControlled {
+				a.executeOrder()
+			} else {
+				a.enemy_act()
+			}
 		}
 		rend.render(lvl)
 		p := playerController{}
