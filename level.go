@@ -25,7 +25,7 @@ func (l *level) getAllActorsAtCoords(x, y int) []*actor {
 func (l *level) getActorByName(name string) *actor {
 	var foundActor *actor
 	for _, a := range l.actors {
-		if strings.Contains(a.name, name) {
+		if strings.Index(a.name, name) == 0 {
 			if foundActor != nil {
 				return nil // partial name belongs to more that one actor
 			}
