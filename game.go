@@ -11,6 +11,16 @@ func (g *game) gameLoop() {
 	for !abortGame {
 		lvl.resetRoomsVisibility()
 
+		for _, a := range CURR_LEVEL.actors {
+			for _, mod := range a.modules {
+				if mod.isEnabled {
+					for _, eff := range mod.staticData.effects {
+						eff.applyModuleEffect(a)
+					}
+				}
+			}
+		}
+
 		rend.render(lvl)
 		if lvl.currentTurnNumber % 10 == 0 {
 			p.playerTurn()

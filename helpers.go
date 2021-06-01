@@ -1,5 +1,7 @@
 package main
 
+import "strings"
+
 func abs(a int) int {
 	if a < 0 {
 		return -a
@@ -19,4 +21,8 @@ func toUnitVector(vx, vy int) (int, int) {
 		vy = vy/abs(vy)
 	}
 	return vx, vy
+}
+
+func stringBeginsWith(str, beg string) bool {
+	return strings.Index(strings.ToLower(str), strings.ToLower(beg)) == 0
 }

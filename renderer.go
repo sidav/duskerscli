@@ -119,8 +119,15 @@ func (r *renderer) renderPlayerStatus(l *level) {
 	currY := 1
 	for _, a := range l.actors {
 		if a.isPlayerControlled {
-			cw.PutString(fmt.Sprintf("%s: %s", a.getStaticData().defaultName, a.name),
-				r.statusXPosition, currY)
+			strsToPut := make([]string, 0)
+			strsToPut = append(strsToPut, fmt.Sprintf("%s: \"%s\"", a.getStaticData().defaultName, a.name))
+			for i := range a.modules {
+				strsToPut = append(strsToPut, a.modules[i].getNameAndEnabled())
+			}
+			for i := range strsToPut {
+				cw.PutString(strsToPut[i], r.statusXPosition, currY)
+				currY++
+			}
 			currY++
 		}
 	}

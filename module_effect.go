@@ -14,8 +14,12 @@ func (me *moduleEffect) applyModuleEffect(user *actor) {
 		ux, uy := user.x, user.y
 		for x := -1; x <= 1; x++ {
 			for y := -1; y <= 1; y++ {
-				CURR_LEVEL.rooms[ux+x][uy+y].isSeen = true
-				CURR_LEVEL.rooms[ux+x][uy+y].isExplored = true
+				room := CURR_LEVEL.getRoomAtCoords(ux+x, uy+y)
+				if room == nil {
+					continue
+				}
+				room.isSeen = true
+				room.isExplored = true
 			}
 		}
 	}

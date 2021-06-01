@@ -47,6 +47,10 @@ func initLevel() *level {
 		x:  0,
 		y:  0,
 		isPlayerControlled: true,
+		modules: []*module{
+			createModuleByStaticCode(MODULE_BATTERY),
+			createModuleByStaticCode(MODULE_SCANNER),
+		},
 	})
 	lvl.actors = append(lvl.actors, &actor{
 		name: "bravo",
@@ -55,7 +59,12 @@ func initLevel() *level {
 		x:  0,
 		y:  0,
 		isPlayerControlled: true,
+		modules: []*module{
+			createModuleByStaticCode(MODULE_BATTERY),
+			createModuleByStaticCode(MODULE_SCANNER),
+		},
 	})
+	
 	lvl.actors = append(lvl.actors, &actor{
 		staticId: ACTOR_MUTANT,
 		hp: 5,

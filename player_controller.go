@@ -33,7 +33,7 @@ func (p *playerController) parsePlayerInput(inputString string) {
 			orderTypeId: ORDER_MOVE,
 		}
 		CURR_LEVEL.setLogMessage("Order set!")
-	case "door":
+	case "door", "open", "close":
 		x1, y1, x2, y2 := p.strToTwoRoomsCoords(splitted[1])
 		conn := CURR_LEVEL.getConnBetweenRoomsAtCoords(x1, y1, x2, y2)
 		if conn != nil {
@@ -41,6 +41,17 @@ func (p *playerController) parsePlayerInput(inputString string) {
 			CURR_LEVEL.appendToLogMessage("Opened.")
 		} else {
 			CURR_LEVEL.appendToLogMessage("Can't find conn at %d,%d - %d,%d.", x1, y1, x2, y2)
+		}
+	case "module":
+		actor := CURR_LEVEL.getActorByName(splitted[1])
+		if actor == nil {
+			return
+		}
+		for _, m := range actor.modules {
+			if stringBeginsWith(m.getName(), splitted[2]) {
+				m.isEnabled = !m.isEnabled
+				CURR_LEVEL.setLogMessage("Module set!")
+			}
 		}
 	}
 }

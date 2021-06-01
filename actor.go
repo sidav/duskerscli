@@ -6,6 +6,7 @@ type actor struct {
 	staticId           uint8
 	hp                 int
 	x, y               int // room-wise
+	modules            []*module
 	isPlayerControlled bool
 	currOrder          *order
 }
