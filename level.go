@@ -12,6 +12,27 @@ type level struct {
 	currentTurnNumber int
 }
 
+func (l *level) getRoomAtCoords(x, y int) *room {
+	if x >= 0 && x < len(l.rooms) && y >= 0 && y < len(l.rooms[x]) {
+		return l.rooms[x][y]
+	}
+	return nil
+}
+
+func (l *level) resetRoomsVisibility() {
+	for x := range l.rooms {
+		for y := range l.rooms[x] {
+			l.rooms[x][y].isSeen = false
+		}
+	}
+	for _, a := range l.actors {
+		if a.isPlayerControlled {
+			l.rooms[a.x][a.y].isExplored = true
+			l.rooms[a.x][a.y].isSeen = true
+		}
+	}
+}
+
 func (l *level) getAllActorsAtCoords(x, y int) []*actor {
 	var actsHere []*actor
 	for _, a := range l.actors {

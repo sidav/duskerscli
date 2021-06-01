@@ -9,7 +9,7 @@ func (g *game) gameLoop() {
 	p := playerController{}
 
 	for !abortGame {
-		// lvl.setLogMessage("")
+		lvl.resetRoomsVisibility()
 
 		rend.render(lvl)
 		if lvl.currentTurnNumber % 10 == 0 {
