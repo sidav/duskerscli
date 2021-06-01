@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type level struct {
 	rooms             [][]*room
@@ -20,12 +23,16 @@ func (l *level) getAllActorsAtCoords(x, y int) []*actor {
 }
 
 func (l *level) getActorByName(name string) *actor {
+	var foundActor *actor
 	for _, a := range l.actors {
-		if a.name == name {
-			return a
+		if strings.Contains(a.name, name) {
+			if foundActor != nil {
+				return nil // partial name belongs to more that one actor
+			}
+			foundActor = a
 		}
 	}
-	return nil
+	return foundActor
 }
 
 func (l *level) setLogMessage(msg string, args ...interface{}) {
@@ -36,24 +43,60 @@ func (l *level) appendToLogMessage(msg string, args ...interface{}) {
 	l.currLog += fmt.Sprintf(" "+msg, args...)
 }
 
-func (l *level) getConnBetweenRoomsAtCoords(x1, y1, x2, y2 int) *connection {
-	diffX := x1 - x2
-	diffY := y1 - y2
-	dist := euclideanDistance(x1, y1, x2, y2)
-	if dist == 0 || dist > 1 {
+func (l *level) canActorMoveByVector(a *actor, vx, vy int) bool {
+	return l.getConnFromRoomByVector(a.x, a.y, vx, vy) != nil
+}
+
+func (l *level) moveActorByVector(a *actor, vx, vy int) {
+	if l.canActorMoveByVector(a, vx, vy) {
+		a.x += vx
+		a.y += vy
+	}
+}
+
+func (l *level) getConnFromRoomByVector(x, y, vx, vy int) *connection {
+	if vx < 0 {
+		vx = -vx
+		x--
+	}
+	if vy < 0 {
+		vy = -vy
+		y--
+	}
+	room := l.rooms[x][y]
+	if room == nil {
 		return nil
 	}
-	neededRoom := l.rooms[x1][y1]
-	if x1 > x2 || y1 > y2 {
-		neededRoom = l.rooms[x2][y2]
-	}
-	for _, c := range neededRoom.conns {
+	for _, c := range room.conns {
 		if c == nil {
 			continue
 		}
-		if c.rcx == abs(diffX) && c.rcy == abs(diffY) {
+		if c.rcx == vx && c.rcy == abs(vy) {
 			return c
 		}
 	}
 	return nil
+}
+
+func (l *level) getConnBetweenRoomsAtCoords(x1, y1, x2, y2 int) *connection {
+	return l.getConnFromRoomByVector(x1, y1, x2-x1, y2-y1)
+	//diffX := x1 - x2
+	//diffY := y1 - y2
+	//dist := euclideanDistance(x1, y1, x2, y2)
+	//if dist == 0 || dist > 1 {
+	//	return nil
+	//}
+	//neededRoom := l.rooms[x1][y1]
+	//if x1 > x2 || y1 > y2 {
+	//	neededRoom = l.rooms[x2][y2]
+	//}
+	//for _, c := range neededRoom.conns {
+	//	if c == nil {
+	//		continue
+	//	}
+	//	if c.rcx == abs(diffX) && c.rcy == abs(diffY) {
+	//		return c
+	//	}
+	//}
+	//return nil
 }
