@@ -2,6 +2,7 @@ package main
 
 type actor struct {
 	name               string
+	nextTurnToAct      int
 	staticId           uint8
 	hp                 int
 	x, y               int // room-wise
@@ -11,6 +12,14 @@ type actor struct {
 
 func (a *actor) getStaticData() *actorStaticData {
 	return staticDataTableActors[a.staticId]
+}
+
+func (a *actor) spendTimeForAction(t int) {
+	a.nextTurnToAct = CURR_LEVEL.currentTurnNumber + t
+}
+
+func (a *actor) isTimeToAct() bool {
+	return a.nextTurnToAct <= CURR_LEVEL.currentTurnNumber
 }
 
 func (a *actor) act() {
@@ -30,16 +39,16 @@ func (a *actor) executeOrder() {
 		vx := a.currOrder.x - a.x
 		vy := a.currOrder.y - a.y
 		vx, vy = toUnitVector(vx, vy)
-		if a.x == a.currOrder.x && a.y == a.currOrder.y {
-			CURR_LEVEL.appendToLogMessage("%s: arrived.", a.name)
-			a.currOrder = nil
-			return
-		}
 		if !CURR_LEVEL.canActorMoveByVector(a, vx, vy) {
 			CURR_LEVEL.appendToLogMessage("Can't move from %d,%d to %d,%d", a.x, a.y, a.currOrder.x, a.currOrder.y)
 			a.currOrder = nil
 			return
 		}
 		CURR_LEVEL.moveActorByVector(a, vx, vy)
+		if a.x == a.currOrder.x && a.y == a.currOrder.y {
+			CURR_LEVEL.appendToLogMessage("%s: arrived.", a.name)
+			a.currOrder = nil
+			return
+		}
 	}
 }

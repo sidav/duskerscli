@@ -103,9 +103,11 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 		if a.isPlayerControlled {
 			cw.SetFgColor(cw.DARK_GREEN)
 			cw.PutChar(a.getStaticData().char, upx+playersActors, upy)
+			playersActors++
 		} else {
 			cw.SetFgColor(cw.RED)
 			cw.PutChar(a.getStaticData().char, upx+roomInnerSizeX-enemiesActors-1, upy+1)
+			enemiesActors++
 		}
 	}
 }

@@ -52,6 +52,7 @@ func (l *level) moveActorByVector(a *actor, vx, vy int) {
 		a.x += vx
 		a.y += vy
 	}
+	a.spendTimeForAction(10)
 }
 
 func (l *level) getConnFromRoomByVector(x, y, vx, vy int) *connection {

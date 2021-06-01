@@ -49,6 +49,14 @@ func initLevel() *level {
 		isPlayerControlled: true,
 	})
 	lvl.actors = append(lvl.actors, &actor{
+		name: "bravo",
+		staticId: ACTOR_DRONE,
+		hp: 5,
+		x:  0,
+		y:  0,
+		isPlayerControlled: true,
+	})
+	lvl.actors = append(lvl.actors, &actor{
 		staticId: ACTOR_MUTANT,
 		hp: 5,
 		x:  3,
