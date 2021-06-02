@@ -16,7 +16,7 @@ func (p *playerController) parsePlayerInput(inputString string) {
 	splitted := strings.Split(inputString, " ")
 	// spLen := len(splitted)
 	switch splitted[0] {
-	case "move":
+	case "move", "navigate", "na":
 		actor := CURR_LEVEL.getActorByName(splitted[1])
 		if actor == nil {
 			return
@@ -33,16 +33,47 @@ func (p *playerController) parsePlayerInput(inputString string) {
 			orderTypeId: ORDER_MOVE,
 		}
 		CURR_LEVEL.setLogMessage("Order set!")
-	case "door", "open", "close":
-		x1, y1, x2, y2 := p.strToTwoRoomsCoords(splitted[1])
-		conn := CURR_LEVEL.getConnBetweenRoomsAtCoords(x1, y1, x2, y2)
-		if conn != nil {
-			conn.isOpened = !conn.isOpened
-			CURR_LEVEL.appendToLogMessage("Opened.")
-		} else {
-			CURR_LEVEL.appendToLogMessage("Can't find conn at %d,%d - %d,%d.", x1, y1, x2, y2)
+	case "door", "open", "close", "d":
+		var open, close bool
+		if splitted[0] == "open" {
+			open = true
 		}
-	case "module":
+		if splitted[0] == "close" {
+			close = true
+		}
+		x1, y1, x2, y2 := p.strToTwoRoomsCoords(splitted[1])
+		if x1 != -1 {
+			conn := CURR_LEVEL.getConnBetweenRoomsAtCoords(x1, y1, x2, y2)
+			if conn != nil {
+				conn.isOpened = !conn.isOpened
+				if open {
+					conn.isOpened = true
+				}
+				if close {
+					conn.isOpened = false
+				}
+				CURR_LEVEL.appendToLogMessage("Opened.")
+			} else {
+				CURR_LEVEL.appendToLogMessage("Can't find conn at %d,%d - %d,%d.", x1, y1, x2, y2)
+			}
+		} else {
+			x, y := p.strToRoomCoords(splitted[1])
+			if x != -1 {
+				conns := CURR_LEVEL.getAllConnectionsOfRoom(x, y)
+				for _, conn := range conns {
+					if conn != nil {
+						conn.isOpened = !conn.isOpened
+						if open {
+							conn.isOpened = true
+						}
+						if close {
+							conn.isOpened = false
+						}
+					}
+				}
+			}
+		}
+	case "module", "mod", "mo":
 		actor := CURR_LEVEL.getActorByName(splitted[1])
 		if actor == nil {
 			return

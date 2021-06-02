@@ -2,6 +2,7 @@ package main
 
 const (
 	EFFECT_SURVEY uint8 = iota
+	EFFECT_GENERATE_ENERGY
 )
 
 type moduleEffect struct {
@@ -22,5 +23,7 @@ func (me *moduleEffect) applyModuleEffect(user *actor) {
 				room.isExplored = true
 			}
 		}
+	case EFFECT_GENERATE_ENERGY:
+		user.acquireEnergy(1)
 	}
 }

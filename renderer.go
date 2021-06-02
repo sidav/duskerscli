@@ -121,6 +121,8 @@ func (r *renderer) renderPlayerStatus(l *level) {
 		if a.isPlayerControlled {
 			strsToPut := make([]string, 0)
 			strsToPut = append(strsToPut, fmt.Sprintf("%s: \"%s\"", a.getStaticData().defaultName, a.name))
+			currEnergy, maxEnergy := a.getEnergyCurrAndMax()
+			strsToPut = append(strsToPut, fmt.Sprintf("ENERGY: %d/%d", currEnergy, maxEnergy))
 			for i := range a.modules {
 				strsToPut = append(strsToPut, a.modules[i].getNameAndEnabled())
 			}

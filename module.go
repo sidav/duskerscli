@@ -1,8 +1,9 @@
 package main
 
 type module struct {
-	isEnabled  bool
-	staticData *moduleStaticData
+	isEnabled           bool
+	currentEnergyCharge int // for batteries
+	staticData          *moduleStaticData
 }
 
 func (m *module) getName() string {
@@ -20,11 +21,11 @@ func (m *module) getNameAndEnabled() string {
 	return m.staticData.defaultName + enStr
 }
 
-
 func createModuleByStaticCode(code int) *module {
 	mod := &module{
 		isEnabled:  false,
 		staticData: staticModuleDataTable[code],
 	}
+	mod.currentEnergyCharge = mod.staticData.addsEnergyStorage
 	return mod
 }

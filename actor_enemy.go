@@ -1,6 +1,6 @@
 package main
 
-func (a *actor) enemy_act() {
+func (a *actor) enemyAct() {
 	// temp
 	// move by random vector
 	for try := 0; try < 10; try++ {

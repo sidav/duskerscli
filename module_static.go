@@ -2,15 +2,20 @@ package main
 
 const (
 	MODULE_BATTERY = iota
-	MODULE_SCANNER = iota
+	MODULE_EMERGENCY_GENERATOR
+	MODULE_SCANNER
 )
 
 type moduleStaticData struct {
-	activatable       bool
-	defaultName       string
+	activatable                 bool
+	immobilizesActorWhileActive bool
+
+	defaultName string
+
 	addsEnergyStorage int
 	drainsEnergy      int
-	effects           []*moduleEffect
+
+	effects []*moduleEffect
 }
 
 var staticModuleDataTable = map[int]*moduleStaticData{
@@ -18,6 +23,16 @@ var staticModuleDataTable = map[int]*moduleStaticData{
 		defaultName:       "Battery",
 		addsEnergyStorage: 100,
 		drainsEnergy:      0,
+	},
+	MODULE_EMERGENCY_GENERATOR: {
+		defaultName:                 "Emerg.generator",
+		activatable:                 true,
+		immobilizesActorWhileActive: true,
+		addsEnergyStorage:           0,
+		drainsEnergy:                0,
+		effects: []*moduleEffect{
+			{EFFECT_GENERATE_ENERGY},
+		},
 	},
 	MODULE_SCANNER: {
 		activatable:       true,

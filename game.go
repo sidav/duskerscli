@@ -11,18 +11,15 @@ func (g *game) gameLoop() {
 	for !abortGame {
 		lvl.resetRoomsVisibility()
 
-		for _, a := range CURR_LEVEL.actors {
-			for _, mod := range a.modules {
-				if mod.isEnabled {
-					for _, eff := range mod.staticData.effects {
-						eff.applyModuleEffect(a)
-					}
-				}
+		if lvl.currentTurnNumber % 10 == 0 { // TODO: think of a better solution
+			for _, a := range CURR_LEVEL.actors {
+				a.applyAllModules()
 			}
 		}
 
-		rend.render(lvl)
 		if lvl.currentTurnNumber % 10 == 0 {
+			rend.render(lvl)
+			lvl.setLogMessage("")
 			p.playerTurn()
 		}
 
@@ -33,7 +30,7 @@ func (g *game) gameLoop() {
 			if a.isPlayerControlled {
 				a.executeOrder()
 			} else {
-				a.enemy_act()
+				a.enemyAct()
 			}
 		}
 

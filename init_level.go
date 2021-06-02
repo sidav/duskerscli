@@ -49,6 +49,7 @@ func initLevel() *level {
 		isPlayerControlled: true,
 		modules: []*module{
 			createModuleByStaticCode(MODULE_BATTERY),
+			createModuleByStaticCode(MODULE_EMERGENCY_GENERATOR),
 			createModuleByStaticCode(MODULE_SCANNER),
 		},
 	})

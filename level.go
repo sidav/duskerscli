@@ -76,6 +76,15 @@ func (l *level) moveActorByVector(a *actor, vx, vy int) {
 	a.spendTimeForAction(10)
 }
 
+func (l *level) getAllConnectionsOfRoom(x, y int) []*connection {
+	var conns []*connection
+	conns = append(conns, l.getConnFromRoomByVector(x, y, 1, 0))
+	conns = append(conns, l.getConnFromRoomByVector(x, y, -1, 0))
+	conns = append(conns, l.getConnFromRoomByVector(x, y, 0, 1))
+	conns = append(conns, l.getConnFromRoomByVector(x, y, 0, -1))
+	return conns
+}
+
 func (l *level) getConnFromRoomByVector(x, y, vx, vy int) *connection {
 	if vx < 0 {
 		vx = -vx

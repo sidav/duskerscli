@@ -27,7 +27,7 @@ func (a *actor) act() {
 	if a.isPlayerControlled {
 		a.executeOrder()
 	} else {
-		a.enemy_act()
+		a.enemyAct()
 	}
 }
 
@@ -50,6 +50,66 @@ func (a *actor) executeOrder() {
 			CURR_LEVEL.appendToLogMessage("%s: arrived.", a.name)
 			a.currOrder = nil
 			return
+		}
+	}
+}
+
+func (a *actor) acquireEnergy(amount int) {
+	for _, m := range a.modules {
+		if m.currentEnergyCharge + amount <= m.staticData.addsEnergyStorage {
+			m.currentEnergyCharge += amount
+			amount = 0
+			break
+		} else {
+			amount -= m.staticData.addsEnergyStorage - m.currentEnergyCharge
+			m.currentEnergyCharge = m.staticData.addsEnergyStorage
+		}
+	}
+}
+
+func (a *actor) spendEnergy(amount int) {
+	for _, m := range a.modules {
+		if m.currentEnergyCharge >= amount {
+			m.currentEnergyCharge -= amount
+			amount = 0
+			break
+		} else {
+			amount -= m.currentEnergyCharge
+			m.currentEnergyCharge = 0
+		}
+	}
+	if amount > 0 {
+		panic("ENERGY SPENDING ERROR")
+	}
+}
+
+func (a *actor) getEnergyCurrAndMax() (int, int) {
+	max := 0
+	curr := 0
+	for _, m := range a.modules {
+		curr += m.currentEnergyCharge
+		max += m.staticData.addsEnergyStorage
+	}
+	if curr > max {
+		curr = max
+		panic("ENERGY > MAX")
+	}
+	return curr, max
+}
+
+func (a *actor) applyAllModules() {
+	for _, mod := range a.modules {
+		ce, _ := a.getEnergyCurrAndMax()
+		if !mod.staticData.activatable || mod.isEnabled {
+			if ce >= mod.staticData.drainsEnergy {
+				a.spendEnergy(mod.staticData.drainsEnergy)
+				for _, eff := range mod.staticData.effects {
+					eff.applyModuleEffect(a)
+				}
+			} else {
+				mod.isEnabled = false
+				CURR_LEVEL.appendToLogMessage("%s: %s forcefully disabled!", a.name, mod.getName())
+			}
 		}
 	}
 }
