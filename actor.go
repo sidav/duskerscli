@@ -11,6 +11,13 @@ type actor struct {
 	currOrder          *order
 }
 
+func (a *actor) getName() string {
+	if a.name != "" {
+		return a.name
+	}
+	return a.getStaticData().defaultName
+}
+
 func (a *actor) getStaticData() *actorStaticData {
 	return staticDataTableActors[a.staticId]
 }

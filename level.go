@@ -7,7 +7,7 @@ import (
 type level struct {
 	rooms             [][]*room
 	actors            []*actor
-	currLog           string
+	currLog           []string
 	currentTurnNumber int
 }
 
@@ -56,11 +56,12 @@ func (l *level) getActorByName(name string) *actor {
 }
 
 func (l *level) setLogMessage(msg string, args ...interface{}) {
-	l.currLog = fmt.Sprintf(msg, args...)
+	l.currLog = append(l.currLog[1:], fmt.Sprintf(msg, args...))
 }
 
 func (l *level) appendToLogMessage(msg string, args ...interface{}) {
-	l.currLog += fmt.Sprintf(" "+msg, args...)
+	l.currLog = append(l.currLog[1:], fmt.Sprintf(msg, args...))
+	// l.currLog += fmt.Sprintf(" "+msg, args...)
 }
 
 func (l *level) canActorMoveByVector(a *actor, vx, vy int) bool {
@@ -74,6 +75,15 @@ func (l *level) moveActorByVector(a *actor, vx, vy int) {
 		a.y += vy
 	}
 	a.spendTimeForAction(10)
+}
+
+func (l *level) clearDestroyedActors() {
+	for i := len(l.actors)-1; i >= 0; i-- {
+		if l.actors[i].hp <= 0 {
+			l.appendToLogMessage("%s destroyed.", l.actors[i].name)
+			l.actors = append(l.actors[:i], l.actors[i+1:]...)
+		}
+	}
 }
 
 func (l *level) getAllConnectionsOfRoom(x, y int) []*connection {

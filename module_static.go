@@ -4,6 +4,7 @@ const (
 	MODULE_BATTERY = iota
 	MODULE_EMERGENCY_GENERATOR
 	MODULE_SCANNER
+	MODULE_GUN
 )
 
 type moduleStaticData struct {
@@ -31,7 +32,9 @@ var staticModuleDataTable = map[int]*moduleStaticData{
 		addsEnergyStorage:           0,
 		drainsEnergy:                0,
 		effects: []*moduleEffect{
-			{EFFECT_GENERATE_ENERGY},
+			{
+				code: EFFECT_GENERATE_ENERGY,
+			},
 		},
 	},
 	MODULE_SCANNER: {
@@ -41,6 +44,18 @@ var staticModuleDataTable = map[int]*moduleStaticData{
 		drainsEnergy:      5,
 		effects: []*moduleEffect{
 			{code: EFFECT_SURVEY},
+		},
+	},
+	MODULE_GUN: {
+		activatable:       true,
+		defaultName:       "9mm auto-gun",
+		addsEnergyStorage: 0,
+		drainsEnergy:      5,
+		effects: []*moduleEffect{
+			{
+				code: EFFECT_SIMPLE_ATTACK,
+				damage: 1,
+			},
 		},
 	},
 }

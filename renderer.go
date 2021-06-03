@@ -22,8 +22,8 @@ func initRenderer() *renderer {
 		logHeight:  3,
 		drawCoords: true,
 	}
-	r.logYPosition = r.logHeight + r.roomSizeY*4
-	r.inputLineYPosition = r.logYPosition + 1
+	r.logYPosition = r.roomSizeY*4 + 1
+	r.inputLineYPosition = r.logYPosition + 3
 	r.statusXPosition = 1 + r.roomSizeX*4
 	return r
 }
@@ -74,9 +74,14 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	roomInnerSizeX := r.roomSizeX - 1
 	roomInnerSizeY := r.roomSizeY - 1
 	// render room itself
+	roomFloorChr := ' '
+	if !room.isSeen {
+		cw.SetFgColor(cw.DARK_BLUE)
+		roomFloorChr = '.'
+	}
 	for x := 0; x < roomInnerSizeX; x++ {
 		for y := 0; y < roomInnerSizeY; y++ {
-			cw.PutChar(' ', upx+x, upy+y)
+			cw.PutChar(roomFloorChr, upx+x, upy+y)
 		}
 	}
 	// render connections
@@ -94,6 +99,10 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 			}
 			cw.PutChar(chr, roomCentX+c.rcx*(r.roomSizeX/2), roomCentY+c.rcy*r.roomSizeY/2)
 		}
+	}
+	if !room.isSeen {
+		cw.SetBgColor(cw.BLACK)
+		return
 	}
 	// render actors
 	actorsHere := l.getAllActorsAtCoords(rx, ry)
@@ -121,8 +130,8 @@ func (r *renderer) renderPlayerStatus(l *level) {
 		if a.isPlayerControlled {
 			strsToPut := make([]string, 0)
 			strsToPut = append(strsToPut, fmt.Sprintf("%s: \"%s\"", a.getStaticData().defaultName, a.name))
-			currEnergy, maxEnergy := a.getEnergyCurrAndMax()
-			strsToPut = append(strsToPut, fmt.Sprintf("ENERGY: %d/%d", currEnergy, maxEnergy))
+			//currEnergy, maxEnergy := a.getEnergyCurrAndMax()
+			//strsToPut = append(strsToPut, fmt.Sprintf("ENERGY: %d/%d", currEnergy, maxEnergy))
 			for i := range a.modules {
 				strsToPut = append(strsToPut, a.modules[i].getNameAndEnabled())
 			}
@@ -137,7 +146,9 @@ func (r *renderer) renderPlayerStatus(l *level) {
 
 func (r *renderer) renderLog(l *level) {
 	cw.SetFgColor(cw.WHITE)
-	cw.PutString(l.currLog, 0, r.logYPosition)
+	for i := range l.currLog {
+		cw.PutString(l.currLog[i], 0, r.logYPosition+i)
+	}
 }
 
 func (r *renderer) readPlayerInput() string {

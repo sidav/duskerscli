@@ -16,7 +16,7 @@ func (g *game) gameLoop() {
 				a.applyAllModules()
 			}
 		}
-
+		lvl.clearDestroyedActors()
 		if lvl.currentTurnNumber % 10 == 0 {
 			rend.render(lvl)
 			lvl.setLogMessage("")
