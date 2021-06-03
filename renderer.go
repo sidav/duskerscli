@@ -101,6 +101,12 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 				cw.PutChar(chr, roomCentX+c.rcx*(r.roomSizeX/2), roomCentY+c.rcy*r.roomSizeY/2)
 			}
 		}
+		// render facilities
+		facsHere := 0
+		for i := range room.facilitiesHere {
+			cw.PutChar(room.facilitiesHere[i].getAppearanceChar(), upx+facsHere, upy+roomInnerSizeY-1)
+			facsHere++
+		}
 	}
 	actorsHere := l.getAllActorsAtCoords(rx, ry)
 	if room.isSeenRightNow {

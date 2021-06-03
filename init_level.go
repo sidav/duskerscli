@@ -93,6 +93,47 @@ func initLevel() *level {
 		})
 	}
 
+	lvl.rooms[0][0].facilitiesHere = append(lvl.rooms[0][0].facilitiesHere,
+		&roomFacility{
+			id:          FACILITY_GENERATOR,
+			number:      1,
+			hp:          100,
+			destroyable: false,
+		},
+	)
+
+	x := rnd.RandInRange(0, 3)
+	y := rnd.RandInRange(0, 3)
+	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
+		&roomFacility{
+			id:          FACILITY_INTERFACE,
+			number:      1,
+			hp:          100,
+			destroyable: false,
+		},
+	)
+	x = rnd.RandInRange(0, 3)
+	y = rnd.RandInRange(0, 3)
+	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
+		&roomFacility{
+			id:          FACILITY_GENERATOR,
+			number:      1,
+			hp:          100,
+			destroyable: false,
+		},
+	)
+
+	x = rnd.RandInRange(0, 3)
+	y = rnd.RandInRange(0, 3)
+	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
+		&roomFacility{
+			id:          FACILITY_TURRET,
+			number:      1,
+			hp:          100,
+			destroyable: false,
+		},
+	)
+
 	lvl.currLog = []string{"a", "b", "c"}
 
 	return lvl
