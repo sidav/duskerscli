@@ -11,13 +11,17 @@ type roomFacility struct {
 	number      int
 	hp          int
 	destroyable bool
+	isActive    bool
 }
 
 func (rf *roomFacility) getAppearanceChar() rune {
 	switch rf.id {
-	case FACILITY_INTERFACE: return '#'
-	case FACILITY_TURRET: return 'T'
-	case FACILITY_GENERATOR: return '%'
+	case FACILITY_INTERFACE:
+		return '#'
+	case FACILITY_TURRET:
+		return 'T'
+	case FACILITY_GENERATOR:
+		return '%'
 	}
 	panic("No rune for facility.")
 }
