@@ -3,7 +3,8 @@ package main
 const (
 	MODULE_BATTERY = iota
 	MODULE_EMERGENCY_GENERATOR
-	MODULE_SCANNER
+	MODULE_SURVEYOR
+	MODULE_MOTION_SCANNER
 	MODULE_GUN
 )
 
@@ -37,13 +38,22 @@ var staticModuleDataTable = map[int]*moduleStaticData{
 			},
 		},
 	},
-	MODULE_SCANNER: {
+	MODULE_SURVEYOR: {
 		activatable:       true,
-		defaultName:       "Scanner",
+		defaultName:       "Surveyor",
 		addsEnergyStorage: 0,
 		drainsEnergy:      5,
 		effects: []*moduleEffect{
 			{code: EFFECT_SURVEY},
+		},
+	},
+	MODULE_MOTION_SCANNER: {
+		activatable:       true,
+		defaultName:       "Motion scanner",
+		addsEnergyStorage: 0,
+		drainsEnergy:      5,
+		effects: []*moduleEffect{
+			{code: EFFECT_MOTION_SCANNER},
 		},
 	},
 	MODULE_GUN: {

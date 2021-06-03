@@ -4,9 +4,10 @@ type room struct {
 	name string
 	// actorsHere
 	// featuresHere
-	isExplored bool
-	isSeen     bool
-	conns      [2]*connection // either to down or to right
+	isExplored           bool
+	isSeenRightNow       bool
+	isUnderMotionScanner bool
+	conns                [2]*connection // either to down or to right
 }
 
 type connection struct {

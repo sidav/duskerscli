@@ -9,10 +9,10 @@ func initLevel() *level {
 		for j := range lvl.rooms[i] {
 			if !rnd.OneChanceFrom(0) {
 				lvl.rooms[i][j] = &room{
-					name:       "",
-					isExplored: false,
-					isSeen:     false,
-					conns:      [2]*connection{},
+					name:           "",
+					isExplored:     false,
+					isSeenRightNow: false,
+					conns:          [2]*connection{},
 				}
 				if i < LEVELSIZE-1 && !rnd.OneChanceFrom(5) {
 					lvl.rooms[i][j].conns[0] = &connection{
@@ -50,7 +50,7 @@ func initLevel() *level {
 		modules: []*module{
 			createModuleByStaticCode(MODULE_BATTERY),
 			createModuleByStaticCode(MODULE_EMERGENCY_GENERATOR),
-			createModuleByStaticCode(MODULE_SCANNER),
+			createModuleByStaticCode(MODULE_SURVEYOR),
 		},
 	})
 	lvl.actors = append(lvl.actors, &actor{
@@ -63,24 +63,24 @@ func initLevel() *level {
 		modules: []*module{
 			createModuleByStaticCode(MODULE_BATTERY),
 			createModuleByStaticCode(MODULE_BATTERY),
-			createModuleByStaticCode(MODULE_SCANNER),
+			createModuleByStaticCode(MODULE_MOTION_SCANNER),
 			createModuleByStaticCode(MODULE_GUN),
 		},
 	})
-	lvl.actors = append(lvl.actors, &actor{
-		name: "Charlie",
-		staticId: ACTOR_DRONE,
-		hp: 5,
-		x:  0,
-		y:  0,
-		isPlayerControlled: true,
-		modules: []*module{
-			createModuleByStaticCode(MODULE_BATTERY),
-			createModuleByStaticCode(MODULE_BATTERY),
-			createModuleByStaticCode(MODULE_SCANNER),
-			createModuleByStaticCode(MODULE_GUN),
-		},
-	})
+	//lvl.actors = append(lvl.actors, &actor{
+	//	name: "Charlie",
+	//	staticId: ACTOR_DRONE,
+	//	hp: 5,
+	//	x:  0,
+	//	y:  0,
+	//	isPlayerControlled: true,
+	//	modules: []*module{
+	//		createModuleByStaticCode(MODULE_BATTERY),
+	//		createModuleByStaticCode(MODULE_BATTERY),
+	//		createModuleByStaticCode(MODULE_SURVEYOR),
+	//		createModuleByStaticCode(MODULE_GUN),
+	//	},
+	//})
 
 
 	for i := 0; i < 8; i++ {

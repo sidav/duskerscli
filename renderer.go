@@ -47,7 +47,7 @@ func (r *renderer) renderLevelOutline(l *level) {
 				chr = rune(value)
 			}
 			if y%(r.roomSizeY) == r.roomSizeY/2 && x == 0 {
-				chr = rune((strconv.Itoa((y - r.roomSizeY/2) / r.roomSizeY + 1))[0])
+				chr = rune((strconv.Itoa((y-r.roomSizeY/2)/r.roomSizeY + 1))[0])
 			}
 			// roomCentY := upy + r.roomSizeY/2 - 1
 			cw.PutChar(chr, x, y)
@@ -66,58 +66,61 @@ func (r *renderer) renderLevel(l *level) {
 
 func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	room := l.rooms[rx][ry]
-	if room == nil || !room.isExplored {
+	if room == nil {
 		return
 	}
 	upx := 1 + rx*r.roomSizeX
 	upy := 1 + ry*r.roomSizeY
 	roomInnerSizeX := r.roomSizeX - 1
 	roomInnerSizeY := r.roomSizeY - 1
-	// render room itself
-	roomFloorChr := ' '
-	if !room.isSeen {
-		cw.SetFgColor(cw.DARK_BLUE)
-		roomFloorChr = '.'
-	}
-	for x := 0; x < roomInnerSizeX; x++ {
-		for y := 0; y < roomInnerSizeY; y++ {
-			cw.PutChar(roomFloorChr, upx+x, upy+y)
+	if room.isExplored {
+		// render room itself
+		roomFloorChr := ' '
+		if !room.isSeenRightNow {
+			cw.SetFgColor(cw.DARK_BLUE)
+			roomFloorChr = '.'
+		}
+		for x := 0; x < roomInnerSizeX; x++ {
+			for y := 0; y < roomInnerSizeY; y++ {
+				cw.PutChar(roomFloorChr, upx+x, upy+y)
+			}
+		}
+		// render connections
+		roomCentX := upx + r.roomSizeX/2 - 1
+		roomCentY := upy + r.roomSizeY/2 - 1
+		cw.SetFgColor(cw.DARK_MAGENTA)
+		for _, c := range room.conns {
+			if c != nil {
+				chr := '+'
+				if c.isOpened {
+					chr = '\''
+				}
+				if c.isBroken {
+					chr = '\\'
+				}
+				cw.PutChar(chr, roomCentX+c.rcx*(r.roomSizeX/2), roomCentY+c.rcy*r.roomSizeY/2)
+			}
 		}
 	}
-	// render connections
-	roomCentX := upx + r.roomSizeX/2 - 1
-	roomCentY := upy + r.roomSizeY/2 - 1
-	cw.SetFgColor(cw.DARK_MAGENTA)
-	for _, c := range room.conns {
-		if c != nil {
-			chr := '+'
-			if c.isOpened {
-				chr = '\''
-			}
-			if c.isBroken {
-				chr = '\\'
-			}
-			cw.PutChar(chr, roomCentX+c.rcx*(r.roomSizeX/2), roomCentY+c.rcy*r.roomSizeY/2)
-		}
-	}
-	if !room.isSeen {
-		cw.SetBgColor(cw.BLACK)
-		return
-	}
-	// render actors
 	actorsHere := l.getAllActorsAtCoords(rx, ry)
-	playersActors := 0
-	enemiesActors := 0
-	for _, a := range actorsHere {
-		if a.isPlayerControlled {
-			cw.SetFgColor(cw.DARK_GREEN)
-			cw.PutChar(a.getStaticData().char, upx+playersActors, upy)
-			playersActors++
-		} else {
-			cw.SetFgColor(cw.RED)
-			cw.PutChar(a.getStaticData().char, upx+roomInnerSizeX-enemiesActors-1, upy+1)
-			enemiesActors++
+	if room.isSeenRightNow {
+		// render actors
+		playersActors := 0
+		enemiesActors := 0
+		for _, a := range actorsHere {
+			if a.isPlayerControlled {
+				cw.SetFgColor(cw.DARK_GREEN)
+				cw.PutChar(a.getStaticData().char, upx+playersActors, upy)
+				playersActors++
+			} else {
+				cw.SetFgColor(cw.RED)
+				cw.PutChar(a.getStaticData().char, upx+roomInnerSizeX-enemiesActors-1, upy+1)
+				enemiesActors++
+			}
 		}
+	} else if room.isUnderMotionScanner {
+		cw.SetFgColor(cw.RED)
+		cw.PutString(strconv.Itoa(len(actorsHere)), upx+roomInnerSizeX/2, upy+1)
 	}
 }
 

@@ -6,10 +6,10 @@ func (a *actor) enemyAct() {
 	switch a.staticId {
 	case ACTOR_MUTANT:
 		actsHere := CURR_LEVEL.getAllActorsAtCoords(a.x, a.y)
-		for _, actor := range actsHere {
-			if actor.isPlayerControlled && actor.hp > 0 {
-				actor.hp -= 1
-				CURR_LEVEL.appendToLogMessage("%s is attacked by %s!", actor.getName(), a.getName())
+		for _, target := range actsHere {
+			if target.isPlayerControlled && target.hp > 0 {
+				target.hp -= 1
+				CURR_LEVEL.appendToLogMessage("%s is attacked by %s!", target.getName(), a.getName())
 				a.spendTimeForAction(10)
 				return
 			}

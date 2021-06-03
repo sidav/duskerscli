@@ -21,13 +21,14 @@ func (l *level) getRoomAtCoords(x, y int) *room {
 func (l *level) resetRoomsVisibility() {
 	for x := range l.rooms {
 		for y := range l.rooms[x] {
-			l.rooms[x][y].isSeen = false
+			l.rooms[x][y].isSeenRightNow = false
+			l.rooms[x][y].isUnderMotionScanner = false
 		}
 	}
 	for _, a := range l.actors {
 		if a.isPlayerControlled {
 			l.rooms[a.x][a.y].isExplored = true
-			l.rooms[a.x][a.y].isSeen = true
+			l.rooms[a.x][a.y].isSeenRightNow = true
 		}
 	}
 }
