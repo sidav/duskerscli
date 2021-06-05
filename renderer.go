@@ -141,12 +141,17 @@ func (r *renderer) renderPlayerStatus(l *level) {
 			strsToPut = append(strsToPut, fmt.Sprintf("%s: \"%s\"", a.getStaticData().defaultName, a.name))
 			//currEnergy, maxEnergy := a.getEnergyCurrAndMax()
 			//strsToPut = append(strsToPut, fmt.Sprintf("ENERGY: %d/%d", currEnergy, maxEnergy))
-			for i := range a.modules {
-				strsToPut = append(strsToPut, a.modules[i].getNameAndEnabled())
-			}
 			for i := range strsToPut {
 				cw.PutString(strsToPut[i], r.statusXPosition, currY)
 				currY++
+			}
+			for i := range a.modules {
+				if a.modules[i].isEnabled {
+					cw.SetColor(cw.BLACK, cw.DARK_GREEN)
+				}
+				cw.PutString(a.modules[i].getNameAndEnabled(), r.statusXPosition, currY)
+				currY++
+				cw.SetColor(cw.WHITE, cw.BLACK)
 			}
 			currY++
 		}

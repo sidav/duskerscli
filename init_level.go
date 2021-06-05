@@ -20,7 +20,7 @@ func initLevel() *level {
 						rcy:       0,
 						isDoor:    true,
 						lockLevel: 0,
-						isOpened:  rnd.OneChanceFrom(3),
+						isOpened:  rnd.OneChanceFrom(2),
 						isBroken:  false,
 						isLocked:  false,
 					}
@@ -31,7 +31,7 @@ func initLevel() *level {
 						rcy:       1,
 						isDoor:    true,
 						lockLevel: 0,
-						isOpened:  rnd.OneChanceFrom(3),
+						isOpened:  rnd.OneChanceFrom(2),
 						isBroken:  false,
 						isLocked:  false,
 					}

@@ -73,16 +73,16 @@ func (p *playerController) parsePlayerInput(inputString string) {
 				}
 			}
 		}
-	case "module", "mod", "mo":
-		actor := CURR_LEVEL.getActorByName(splitted[1])
-		if actor == nil {
-			return
-		}
-		for _, m := range actor.modules {
-			if stringBeginsWith(m.getName(), splitted[2]) {
-				m.isEnabled = !m.isEnabled
-				CURR_LEVEL.setLogMessage("Module set!")
-			}
+	}
+	// try to just give module order
+	actor := CURR_LEVEL.getActorByName(splitted[0])
+	if actor == nil {
+		return
+	}
+	for _, m := range actor.modules {
+		if stringBeginsWith(m.getName(), splitted[1]) {
+			m.isEnabled = !m.isEnabled
+			CURR_LEVEL.setLogMessage("Module set!")
 		}
 	}
 }

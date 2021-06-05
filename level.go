@@ -81,7 +81,7 @@ func (l *level) moveActorByVector(a *actor, vx, vy int) {
 func (l *level) clearDestroyedActors() {
 	for i := len(l.actors)-1; i >= 0; i-- {
 		if l.actors[i].hp <= 0 {
-			l.appendToLogMessage("%s destroyed.", l.actors[i].name)
+			l.appendToLogMessage("%s destroyed.", l.actors[i].getName())
 			l.actors = append(l.actors[:i], l.actors[i+1:]...)
 		}
 	}
