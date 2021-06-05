@@ -22,13 +22,13 @@ func initRenderer() *renderer {
 		logHeight:  3,
 		drawCoords: true,
 	}
-	r.logYPosition = r.roomSizeY*4 + 1
-	r.inputLineYPosition = r.logYPosition + 3
-	r.statusXPosition = 1 + r.roomSizeX*4
 	return r
 }
 
 func (r *renderer) render(l *level) {
+	r.statusXPosition = 1 + r.roomSizeX*len(l.rooms)
+	r.logYPosition = r.roomSizeY*len(l.rooms[0]) + 1
+	r.inputLineYPosition = r.logYPosition + 3
 	cw.Clear_console()
 	r.renderLevelOutline(l)
 	r.renderLevel(l)

@@ -16,3 +16,12 @@ type connection struct {
 	lockLevel                    int
 	isOpened, isBroken, isLocked bool
 }
+
+func (r *room) hasFacility(facCode uint8) bool {
+	for _, f := range r.facilitiesHere {
+		if f.code == facCode {
+			return true
+		}
+	}
+	return false
+}

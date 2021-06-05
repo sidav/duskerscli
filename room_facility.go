@@ -7,7 +7,7 @@ const (
 )
 
 type roomFacility struct {
-	id          uint8
+	code        uint8
 	number      int
 	hp          int
 	destroyable bool
@@ -15,7 +15,7 @@ type roomFacility struct {
 }
 
 func (rf *roomFacility) getAppearanceChar() rune {
-	switch rf.id {
+	switch rf.code {
 	case FACILITY_INTERFACE:
 		return '#'
 	case FACILITY_TURRET:
