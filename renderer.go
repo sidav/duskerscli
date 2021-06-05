@@ -75,10 +75,10 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	roomInnerSizeY := r.roomSizeY - 1
 	if room.isExplored {
 		// render room itself
-		roomFloorChr := ' '
+		cw.SetFgColor(cw.DARK_YELLOW)
+		roomFloorChr := '.'
 		if !room.isSeenRightNow {
-			cw.SetFgColor(cw.DARK_BLUE)
-			roomFloorChr = '.'
+			roomFloorChr = ' '
 		}
 		for x := 0; x < roomInnerSizeX; x++ {
 			for y := 0; y < roomInnerSizeY; y++ {
@@ -158,6 +158,42 @@ func (r *renderer) renderLog(l *level) {
 	for i := range l.currLog {
 		cw.PutString(l.currLog[i], 0, r.logYPosition+i)
 	}
+}
+
+func (r *renderer) showModalTerminal(lines []string) string {
+	cwid, chei := cw.GetConsoleSize()
+	winx := r.statusXPosition
+	winy := 0
+	winw := cwid - winx - 1
+	winh := chei-1
+	for x := winx; x < winx+winw; x++ {
+		for y := winy; y < winy+winh; y++ {
+			cw.PutChar(' ', x, y)
+		}
+	}
+	cw.SetBgColor(cw.DARK_GREEN)
+	for x := winx; x <= winx+winw; x++ {
+		cw.PutChar(' ', x, winy)
+		cw.PutChar(' ', x, winy+winh)
+	}
+	for y := winy; y <= winy+winh; y++ {
+		cw.PutChar(' ', winx, y)
+		cw.PutChar(' ', winx+winw, y)
+	}
+	cw.SetColor(cw.DARK_GREEN, cw.BLACK)
+	for i := range lines {
+		cw.PutString(lines[i], winx+1, winy+1+i)
+	}
+	currLine := ""
+	key := ""
+	for key != "ENTER" {
+		currLine, key = cw.ReadTextInputAndKeyPress("> ", currLine, winx+1, winy+len(lines)+2)
+		if key == "CTRL+C" {
+			abortGame = true
+			return "exit"
+		}
+	}
+	return currLine
 }
 
 func (r *renderer) readPlayerInput() string {

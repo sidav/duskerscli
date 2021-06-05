@@ -111,7 +111,7 @@ func (a *actor) applyAllModules() {
 			if ce >= mod.staticData.drainsEnergy {
 				a.spendEnergy(mod.staticData.drainsEnergy)
 				for _, eff := range mod.staticData.effects {
-					eff.applyModuleEffect(a)
+					mod.applyModuleEffect(a, eff)
 				}
 			} else {
 				mod.isEnabled = false

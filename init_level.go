@@ -20,7 +20,7 @@ func initLevel() *level {
 						rcy:       0,
 						isDoor:    true,
 						lockLevel: 0,
-						isOpened:  rnd.OneChanceFrom(4),
+						isOpened:  rnd.OneChanceFrom(3),
 						isBroken:  false,
 						isLocked:  false,
 					}
@@ -31,7 +31,7 @@ func initLevel() *level {
 						rcy:       1,
 						isDoor:    true,
 						lockLevel: 0,
-						isOpened:  rnd.OneChanceFrom(4),
+						isOpened:  rnd.OneChanceFrom(3),
 						isBroken:  false,
 						isLocked:  false,
 					}
@@ -63,6 +63,7 @@ func initLevel() *level {
 		modules: []*module{
 			createModuleByStaticCode(MODULE_BATTERY),
 			createModuleByStaticCode(MODULE_BATTERY),
+			createModuleByStaticCode(MODULE_NETWORKING),
 			createModuleByStaticCode(MODULE_MOTION_SCANNER),
 			createModuleByStaticCode(MODULE_GUN),
 		},
@@ -96,6 +97,12 @@ func initLevel() *level {
 	lvl.rooms[0][0].facilitiesHere = append(lvl.rooms[0][0].facilitiesHere,
 		&roomFacility{
 			code:        FACILITY_GENERATOR,
+			number:      1,
+			hp:          100,
+			destroyable: false,
+		},
+		&roomFacility{
+			code:        FACILITY_INTERFACE,
 			number:      1,
 			hp:          100,
 			destroyable: false,

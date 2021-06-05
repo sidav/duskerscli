@@ -4,6 +4,7 @@ const (
 	EFFECT_SURVEY uint8 = iota
 	EFFECT_MOTION_SCANNER
 	EFFECT_GENERATE_ENERGY
+	EFFECT_NETWORK_CONNECTION
 
 	EFFECT_SIMPLE_ATTACK
 )
@@ -13,7 +14,7 @@ type moduleEffect struct {
 	damage int
 }
 
-func (me *moduleEffect) applyModuleEffect(user *actor) {
+func (m *module) applyModuleEffect(user *actor, me *moduleEffect) {
 	switch me.code {
 	case EFFECT_SURVEY:
 		ux, uy := user.x, user.y
@@ -39,6 +40,13 @@ func (me *moduleEffect) applyModuleEffect(user *actor) {
 		}
 	case EFFECT_GENERATE_ENERGY:
 		user.acquireEnergy(1)
+	case EFFECT_NETWORK_CONNECTION:
+		if CURR_LEVEL.rooms[user.x][user.y].hasFacility(FACILITY_INTERFACE) {
+			CURR_LEVEL.showNetworkTerminal()
+		} else {
+			CURR_LEVEL.appendToLogMessage("But this room has no network interface!")
+		}
+		m.isEnabled = false
 	case EFFECT_SIMPLE_ATTACK:
 		actrs := CURR_LEVEL.getAllActorsAtCoords(user.x, user.y)
 		for _, target := range actrs {

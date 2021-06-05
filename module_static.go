@@ -5,6 +5,7 @@ const (
 	MODULE_EMERGENCY_GENERATOR
 	MODULE_SURVEYOR
 	MODULE_MOTION_SCANNER
+	MODULE_NETWORKING
 	MODULE_GUN
 )
 
@@ -45,6 +46,15 @@ var staticModuleDataTable = map[int]*moduleStaticData{
 		drainsEnergy:      5,
 		effects: []*moduleEffect{
 			{code: EFFECT_SURVEY},
+		},
+	},
+	MODULE_NETWORKING: {
+		activatable:       true,
+		defaultName:       "Network link",
+		addsEnergyStorage: 0,
+		drainsEnergy:      0,
+		effects: []*moduleEffect{
+			{code: EFFECT_NETWORK_CONNECTION},
 		},
 	},
 	MODULE_MOTION_SCANNER: {
