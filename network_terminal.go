@@ -24,7 +24,9 @@ func (l *level) parseTerminalInput(input string) {
 	case "survey":
 		for x := range l.rooms {
 			for y := range l.rooms[x] {
-				l.rooms[x][y].isExplored = true
+				if l.rooms[x][y] != nil {
+					l.rooms[x][y].isExplored = true
+				}
 			}
 		}
 	}

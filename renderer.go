@@ -65,6 +65,7 @@ func (r *renderer) renderLevel(l *level) {
 }
 
 func (r *renderer) renderRoomAt(l *level, rx, ry int) {
+	r.printRoomLetterCoordsAtRoom(l, rx, ry)
 	room := l.rooms[rx][ry]
 	if room == nil {
 		return
@@ -73,7 +74,6 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	upy := 1 + ry*r.roomSizeY
 	roomInnerSizeX := r.roomSizeX - 1
 	roomInnerSizeY := r.roomSizeY - 1
-	r.printRoomLetterCoordsAtRoom(l, rx, ry)
 	if room.isExplored {
 		// render room itself
 		cw.SetFgColor(cw.DARK_YELLOW)
@@ -85,6 +85,9 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 			for y := 0; y < roomInnerSizeY; y++ {
 				cw.PutChar(roomFloorChr, upx+x, upy+y)
 			}
+		}
+		if !room.isSeenRightNow {
+			r.printRoomLetterCoordsAtRoom(l, rx, ry)
 		}
 		// render connections
 		roomCentX := upx + r.roomSizeX/2 - 1
@@ -137,7 +140,11 @@ func (r *renderer) printRoomLetterCoordsAtRoom(l *level, rx, ry int) {
 	number := strconv.Itoa(ry+1)
 	roomCentX := 1 + rx*r.roomSizeX + r.roomSizeX/2 - 1
 	roomCentY := 1 + ry*r.roomSizeY + r.roomSizeY/2 - 1
-	cw.PutString(""+letter+number, roomCentX, roomCentY)
+	if r.roomSizeX % 2 != 0 {
+		cw.PutString(letter+number, roomCentX, roomCentY)
+	} else {
+		cw.PutString(letter+"-"+number, roomCentX-1, roomCentY)
+	}
 	cw.SetColor(cw.WHITE, cw.BLACK)
 }
 

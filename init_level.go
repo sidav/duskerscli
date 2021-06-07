@@ -15,15 +15,22 @@ func initLevel() *level {
 	for i := range(lvl.rooms) {
 		lvl.rooms[i] = make([]*room, LEVELSIZE)
 		for j := range lvl.rooms[i] {
-			if !rnd.OneChanceFrom(0) {
+			if !rnd.OneChanceFrom(8) {
 				lvl.rooms[i][j] = &room{
 					name:           "",
 					isExplored:     false,
 					isSeenRightNow: false,
 					conns:          [2]*connection{},
 				}
-				if i < LEVELSIZE-1 && !rnd.OneChanceFrom(5) {
-					lvl.rooms[i][j].conns[0] = &connection{
+			}
+		}
+	}
+
+	for x := range lvl.rooms {
+		for y := range lvl.rooms[x] {
+			if lvl.rooms[x][y] != nil {
+				if x < LEVELSIZE-1 && lvl.rooms[x+1][y] != nil && !rnd.OneChanceFrom(5) {
+					lvl.rooms[x][y].conns[0] = &connection{
 						rcx:       1,
 						rcy:       0,
 						isDoor:    true,
@@ -33,8 +40,8 @@ func initLevel() *level {
 						isLocked:  false,
 					}
 				}
-				if j < LEVELSIZE-1 && !rnd.OneChanceFrom(5) {
-					lvl.rooms[i][j].conns[1] = &connection{
+				if y < LEVELSIZE-1 && lvl.rooms[x][y+1] != nil && !rnd.OneChanceFrom(5) {
+					lvl.rooms[x][y].conns[1] = &connection{
 						rcx:       0,
 						rcy:       1,
 						isDoor:    true,
