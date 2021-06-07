@@ -2,8 +2,6 @@ package main
 
 type room struct {
 	name string
-	// actorsHere
-	facilitiesHere       []*roomFacility
 	isExplored           bool
 	isSeenRightNow       bool
 	isUnderMotionScanner bool

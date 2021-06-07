@@ -6,6 +6,7 @@ type actor struct {
 	staticId           uint8
 	hp                 int
 	x, y               int // room-wise
+	asFacility         *facility
 	modules            []*module
 	isPlayerControlled bool
 	currOrder          *order
@@ -61,7 +62,7 @@ func (a *actor) executeOrder() {
 
 func (a *actor) acquireEnergy(amount int) {
 	for _, m := range a.modules {
-		if m.currentEnergyCharge + amount <= m.staticData.addsEnergyStorage {
+		if m.currentEnergyCharge+amount <= m.staticData.addsEnergyStorage {
 			m.currentEnergyCharge += amount
 			amount = 0
 			break

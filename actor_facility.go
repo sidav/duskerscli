@@ -6,7 +6,7 @@ const (
 	FACILITY_TURRET
 )
 
-type roomFacility struct {
+type facility struct {
 	code        uint8
 	number      int
 	hp          int
@@ -14,7 +14,7 @@ type roomFacility struct {
 	isActive    bool
 }
 
-func (rf *roomFacility) getAppearanceChar() rune {
+func (rf *facility) getAppearanceChar() rune {
 	switch rf.code {
 	case FACILITY_INTERFACE:
 		return '#'

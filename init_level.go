@@ -87,13 +87,13 @@ func initLevel() *level {
 	})
 
 	startRoom.facilitiesHere = append(startRoom.facilitiesHere,
-		&roomFacility{
+		&facility{
 			code:        FACILITY_GENERATOR,
 			number:      1,
 			hp:          100,
 			destroyable: false,
 		},
-		&roomFacility{
+		&facility{
 			code:        FACILITY_INTERFACE,
 			number:      1,
 			hp:          100,
@@ -114,7 +114,7 @@ func initLevel() *level {
 
 	_, x, y := lvl.getRandomRoomExceptForRange(0, 0, 0, 0)
 	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
-		&roomFacility{
+		&facility{
 			code:        FACILITY_INTERFACE,
 			number:      1,
 			hp:          100,
@@ -124,7 +124,7 @@ func initLevel() *level {
 
 	_, x, y = lvl.getRandomRoomExceptForRange(0, 0, 0, 0)
 	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
-		&roomFacility{
+		&facility{
 			code:        FACILITY_GENERATOR,
 			number:      1,
 			hp:          100,
@@ -134,7 +134,7 @@ func initLevel() *level {
 
 	_, x, y = lvl.getRandomRoomExceptForRange(0, 0, 0, 0)
 	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
-		&roomFacility{
+		&facility{
 			code:        FACILITY_TURRET,
 			number:      1,
 			hp:          100,
