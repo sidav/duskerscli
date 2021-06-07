@@ -1,7 +1,15 @@
 package main
 
+import "duskerscli/pathfinder"
+
 func initLevel() *level {
 	lvl := &level{}
+	lvl.pathfinder = &pathfinder.AStarPathfinder{
+		DiagonalMoveAllowed:       false,
+		ForceGetPath:              true,
+		ForceIncludeFinish:        false,
+		AutoAdjustDefaultMaxSteps: false,
+	}
 	const LEVELSIZE = 4
 	lvl.rooms = make([][]*room, LEVELSIZE)
 	for i := range(lvl.rooms) {

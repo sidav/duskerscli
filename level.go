@@ -1,6 +1,7 @@
 package main
 
 import (
+	"duskerscli/pathfinder"
 	"fmt"
 )
 
@@ -9,6 +10,8 @@ type level struct {
 	actors            []*actor
 	currLog           []string
 	currentTurnNumber int
+
+	pathfinder *pathfinder.AStarPathfinder
 }
 
 func (l *level) getRoomAtCoords(x, y int) *room {
@@ -21,8 +24,10 @@ func (l *level) getRoomAtCoords(x, y int) *room {
 func (l *level) resetRoomsVisibility() {
 	for x := range l.rooms {
 		for y := range l.rooms[x] {
-			l.rooms[x][y].isSeenRightNow = false
-			l.rooms[x][y].isUnderMotionScanner = false
+			if l.rooms[x][y] != nil {
+				l.rooms[x][y].isSeenRightNow = false
+				l.rooms[x][y].isUnderMotionScanner = false
+			}
 		}
 	}
 	for _, a := range l.actors {
@@ -79,7 +84,7 @@ func (l *level) moveActorByVector(a *actor, vx, vy int) {
 }
 
 func (l *level) clearDestroyedActors() {
-	for i := len(l.actors)-1; i >= 0; i-- {
+	for i := len(l.actors) - 1; i >= 0; i-- {
 		if l.actors[i].hp <= 0 {
 			l.appendToLogMessage("%s destroyed.", l.actors[i].getName())
 			l.actors = append(l.actors[:i], l.actors[i+1:]...)

@@ -44,9 +44,7 @@ func (a *actor) executeOrder() {
 	}
 	switch a.currOrder.orderTypeId {
 	case ORDER_MOVE:
-		vx := a.currOrder.x - a.x
-		vy := a.currOrder.y - a.y
-		vx, vy = toUnitVector(vx, vy)
+		vx, vy := CURR_LEVEL.findNextStepInPathFromTo(a.x, a.y, a.currOrder.x, a.currOrder.y)
 		if !CURR_LEVEL.canActorMoveByVector(a, vx, vy) {
 			CURR_LEVEL.appendToLogMessage("Can't move from %d,%d to %d,%d", a.x, a.y, a.currOrder.x, a.currOrder.y)
 			a.currOrder = nil
