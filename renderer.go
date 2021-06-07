@@ -73,6 +73,7 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	upy := 1 + ry*r.roomSizeY
 	roomInnerSizeX := r.roomSizeX - 1
 	roomInnerSizeY := r.roomSizeY - 1
+	r.printRoomLetterCoordsAtRoom(l, rx, ry)
 	if room.isExplored {
 		// render room itself
 		cw.SetFgColor(cw.DARK_YELLOW)
@@ -125,9 +126,24 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	}
 }
 
+func (r *renderer) printRoomLetterCoordsAtRoom(l *level, rx, ry int) {
+	room := l.rooms[rx][ry]
+	if room == nil || !room.isExplored {
+		cw.SetColor(cw.BLACK, cw.DARK_GRAY)
+	} else {
+		cw.SetColor(cw.DARK_GRAY, cw.BLACK)
+	}
+	letter := string(rune('A' + rx))
+	number := strconv.Itoa(ry+1)
+	roomCentX := 1 + rx*r.roomSizeX + r.roomSizeX/2 - 1
+	roomCentY := 1 + ry*r.roomSizeY + r.roomSizeY/2 - 1
+	cw.PutString(""+letter+number, roomCentX, roomCentY)
+	cw.SetColor(cw.WHITE, cw.BLACK)
+}
+
 func (r *renderer) renderConnectionForRoomCenterCoords(c *connection, rx, ry int, reverse bool) {
 	if c == nil {
-		return 
+		return
 	}
 	chr := '+'
 	if c.isOpened {

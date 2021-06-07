@@ -48,12 +48,14 @@ func initLevel() *level {
 		}
 	}
 
+	startRoom, srx, sry := lvl.getRandomRoomInRange(0, 0, 1, 1)
+
 	lvl.actors = append(lvl.actors, &actor{
 		name: "Alpha",
 		staticId: ACTOR_DRONE,
 		hp: 5,
-		x:  0,
-		y:  0,
+		x:  srx,
+		y:  sry,
 		isPlayerControlled: true,
 		modules: []*module{
 			createModuleByStaticCode(MODULE_BATTERY),
@@ -65,8 +67,8 @@ func initLevel() *level {
 		name: "Bravo",
 		staticId: ACTOR_DRONE,
 		hp: 5,
-		x:  0,
-		y:  0,
+		x:  srx,
+		y:  sry,
 		isPlayerControlled: true,
 		modules: []*module{
 			createModuleByStaticCode(MODULE_BATTERY),
@@ -76,49 +78,34 @@ func initLevel() *level {
 			createModuleByStaticCode(MODULE_GUN),
 		},
 	})
-	//lvl.actors = append(lvl.actors, &actor{
-	//	name: "Charlie",
-	//	staticId: ACTOR_DRONE,
-	//	hp: 5,
-	//	x:  0,
-	//	y:  0,
-	//	isPlayerControlled: true,
-	//	modules: []*module{
-	//		createModuleByStaticCode(MODULE_BATTERY),
-	//		createModuleByStaticCode(MODULE_BATTERY),
-	//		createModuleByStaticCode(MODULE_SURVEYOR),
-	//		createModuleByStaticCode(MODULE_GUN),
-	//	},
-	//})
 
+	startRoom.facilitiesHere = append(startRoom.facilitiesHere,
+		&roomFacility{
+			code:        FACILITY_GENERATOR,
+			number:      1,
+			hp:          100,
+			destroyable: false,
+		},
+		&roomFacility{
+			code:        FACILITY_INTERFACE,
+			number:      1,
+			hp:          100,
+			destroyable: false,
+		},
+	)
 
 	for i := 0; i < 8; i++ {
+		_, x, y := lvl.getRandomRoomExceptForRange(0, 0, 1, 1)
 		lvl.actors = append(lvl.actors, &actor{
 			staticId:           ACTOR_MUTANT,
 			hp:                 1,
-			x:                  3,
-			y:                  3,
+			x:                  x,
+			y:                  y,
 			isPlayerControlled: false,
 		})
 	}
 
-	lvl.rooms[0][0].facilitiesHere = append(lvl.rooms[0][0].facilitiesHere,
-		&roomFacility{
-			code:        FACILITY_GENERATOR,
-			number:      1,
-			hp:          100,
-			destroyable: false,
-		},
-		&roomFacility{
-			code:        FACILITY_INTERFACE,
-			number:      1,
-			hp:          100,
-			destroyable: false,
-		},
-	)
-
-	x := rnd.RandInRange(0, 3)
-	y := rnd.RandInRange(0, 3)
+	_, x, y := lvl.getRandomRoomExceptForRange(0, 0, 0, 0)
 	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
 		&roomFacility{
 			code:        FACILITY_INTERFACE,
@@ -127,8 +114,8 @@ func initLevel() *level {
 			destroyable: false,
 		},
 	)
-	x = rnd.RandInRange(0, 3)
-	y = rnd.RandInRange(0, 3)
+
+	_, x, y = lvl.getRandomRoomExceptForRange(0, 0, 0, 0)
 	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
 		&roomFacility{
 			code:        FACILITY_GENERATOR,
@@ -138,8 +125,7 @@ func initLevel() *level {
 		},
 	)
 
-	x = rnd.RandInRange(0, 3)
-	y = rnd.RandInRange(0, 3)
+	_, x, y = lvl.getRandomRoomExceptForRange(0, 0, 0, 0)
 	lvl.rooms[x][y].facilitiesHere = append(lvl.rooms[x][y].facilitiesHere,
 		&roomFacility{
 			code:        FACILITY_TURRET,
@@ -152,4 +138,29 @@ func initLevel() *level {
 	lvl.currLog = []string{"a", "b", "c"}
 
 	return lvl
+}
+
+func (l *level) getRandomRoomInRange(fx, fy, tx, ty int) (*room, int, int) {
+	for try := 0; try < 25; try++ {
+		x := rnd.RandInRange(fx, tx)
+		y := rnd.RandInRange(fy, ty)
+		if l.rooms[x][y] != nil {
+			return l.rooms[x][y], x, y
+		}
+	}
+	panic("GetRandomRoom failed!")
+}
+
+func (l *level) getRandomRoomExceptForRange(fx, fy, tx, ty int) (*room, int, int) {
+	for try := 0; try < 25; try++ {
+		x := rnd.Rand(len(l.rooms))
+		y := rnd.Rand(len(l.rooms[0]))
+		if fx <= x && x <= tx && fy <= y && y <= ty {
+			continue
+		}
+		if l.rooms[x][y] != nil {
+			return l.rooms[x][y], x, y
+		}
+	}
+	panic("GetRandomRoom failed!")
 }
