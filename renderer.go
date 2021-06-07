@@ -90,17 +90,12 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 		roomCentY := upy + r.roomSizeY/2 - 1
 		cw.SetFgColor(cw.DARK_MAGENTA)
 		for _, c := range room.conns {
-			if c != nil {
-				chr := '+'
-				if c.isOpened {
-					chr = '\''
-				}
-				if c.isBroken {
-					chr = '\\'
-				}
-				cw.PutChar(chr, roomCentX+c.rcx*(r.roomSizeX/2), roomCentY+c.rcy*r.roomSizeY/2)
-			}
+			r.renderConnectionForRoomCenterCoords(c, roomCentX, roomCentY, false)
 		}
+		// also render connections from the other rooms to this one
+		r.renderConnectionForRoomCenterCoords(l.getConnBetweenRoomsAtCoords(rx, ry, rx-1, ry), roomCentX, roomCentY, true)
+		r.renderConnectionForRoomCenterCoords(l.getConnBetweenRoomsAtCoords(rx, ry, rx, ry-1), roomCentX, roomCentY, true)
+
 		// render facilities
 		facsHere := 0
 		for i := range room.facilitiesHere {
@@ -127,6 +122,24 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 	} else if room.isUnderMotionScanner {
 		cw.SetFgColor(cw.RED)
 		cw.PutString(strconv.Itoa(len(actorsHere)), upx+roomInnerSizeX/2, upy+1)
+	}
+}
+
+func (r *renderer) renderConnectionForRoomCenterCoords(c *connection, rx, ry int, reverse bool) {
+	if c == nil {
+		return 
+	}
+	chr := '+'
+	if c.isOpened {
+		chr = '\''
+	}
+	if c.isBroken {
+		chr = '\\'
+	}
+	if reverse {
+		cw.PutChar(chr, rx-c.rcx*(r.roomSizeX/2), ry-c.rcy*r.roomSizeY/2)
+	} else {
+		cw.PutChar(chr, rx+c.rcx*(r.roomSizeX/2), ry+c.rcy*r.roomSizeY/2)
 	}
 }
 
@@ -170,7 +183,7 @@ func (r *renderer) showModalTerminal(lines []string) string {
 	winx := r.statusXPosition
 	winy := 0
 	winw := cwid - winx - 1
-	winh := chei-1
+	winh := chei - 1
 	for x := winx; x < winx+winw; x++ {
 		for y := winy; y < winy+winh; y++ {
 			cw.PutChar(' ', x, y)
