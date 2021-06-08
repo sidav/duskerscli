@@ -61,6 +61,25 @@ func (l *level) getActorByName(name string) *actor {
 	return foundActor
 }
 
+func (l *level) getFacilitiesAt(x, y int) []*actor {
+	var facsHere []*actor
+	for _, a := range l.actors {
+		if a.x == x && a.y == y && a.asFacility != nil {
+			facsHere = append(facsHere, a)
+		}
+	}
+	return facsHere
+}
+
+func (l *level) hasFacilityAtCoords(facCode uint8, x, y int) bool {
+	for _, f := range l.actors {
+		if f.asFacility != nil && f.asFacility.code == facCode && f.x == x && f.y == y {
+			return true
+		}
+	}
+	return false
+}
+
 func (l *level) setLogMessage(msg string, args ...interface{}) {
 	l.currLog = append(l.currLog[1:], fmt.Sprintf(msg, args...))
 }

@@ -99,27 +99,24 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 		// also render connections from the other rooms to this one
 		r.renderConnectionForRoomCenterCoords(l.getConnBetweenRoomsAtCoords(rx, ry, rx-1, ry), roomCentX, roomCentY, true)
 		r.renderConnectionForRoomCenterCoords(l.getConnBetweenRoomsAtCoords(rx, ry, rx, ry-1), roomCentX, roomCentY, true)
-
-		// render facilities
-		facsHere := 0
-		for i := range room.facilitiesHere {
-			cw.PutChar(room.facilitiesHere[i].getAppearanceChar(), upx+facsHere, upy+roomInnerSizeY-1)
-			facsHere++
-		}
 	}
 	actorsHere := l.getAllActorsAtCoords(rx, ry)
 	if room.isSeenRightNow {
 		// render actors
 		playersActors := 0
 		enemiesActors := 0
+		facilities := 0
 		for _, a := range actorsHere {
-			if a.isPlayerControlled {
+			if a.asFacility != nil {
+				cw.PutChar(a.getAppearanceChar(), upx+facilities, upy+roomInnerSizeY-1)
+				facilities++
+			} else if a.isPlayerControlled {
 				cw.SetFgColor(cw.DARK_GREEN)
-				cw.PutChar(a.getStaticData().char, upx+playersActors, upy)
+				cw.PutChar(a.getAppearanceChar(), upx+playersActors, upy)
 				playersActors++
 			} else {
 				cw.SetFgColor(cw.RED)
-				cw.PutChar(a.getStaticData().char, upx+roomInnerSizeX-enemiesActors-1, upy+1)
+				cw.PutChar(a.getAppearanceChar(), upx+roomInnerSizeX-enemiesActors-1, upy+1)
 				enemiesActors++
 			}
 		}

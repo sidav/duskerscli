@@ -41,7 +41,7 @@ func (m *module) applyModuleEffect(user *actor, me *moduleEffect) {
 	case EFFECT_GENERATE_ENERGY:
 		user.acquireEnergy(1)
 	case EFFECT_NETWORK_CONNECTION:
-		if CURR_LEVEL.rooms[user.x][user.y].hasFacility(FACILITY_INTERFACE) {
+		if CURR_LEVEL.hasFacilityAtCoords(FACILITY_INTERFACE, user.x, user.y) {
 			CURR_LEVEL.showNetworkTerminal()
 		} else {
 			CURR_LEVEL.appendToLogMessage("But this room has no network interface!")

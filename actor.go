@@ -12,6 +12,13 @@ type actor struct {
 	currOrder          *order
 }
 
+func (a *actor) getAppearanceChar() rune {
+	if a.asFacility != nil {
+		return a.asFacility.getAppearanceChar()
+	}
+	return a.getStaticData().char
+}
+
 func (a *actor) getName() string {
 	if a.name != "" {
 		return a.name
@@ -32,6 +39,9 @@ func (a *actor) isTimeToAct() bool {
 }
 
 func (a *actor) act() {
+	if a.asFacility != nil {
+		return 
+	}
 	if a.isPlayerControlled {
 		a.executeOrder()
 	} else {

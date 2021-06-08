@@ -27,11 +27,7 @@ func (g *game) gameLoop() {
 			if !a.isTimeToAct() {
 				continue
 			}
-			if a.isPlayerControlled {
-				a.executeOrder()
-			} else {
-				a.enemyAct()
-			}
+			a.act()
 		}
 
 		lvl.currentTurnNumber++

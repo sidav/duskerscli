@@ -7,11 +7,10 @@ const (
 )
 
 type facility struct {
-	code        uint8
-	number      int
-	hp          int
-	destroyable bool
-	isActive    bool
+	code             uint8
+	associatedNumber int
+	destroyable      bool
+	isActive         bool
 }
 
 func (rf *facility) getAppearanceChar() rune {
