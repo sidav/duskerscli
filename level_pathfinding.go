@@ -30,14 +30,3 @@ func (l *level) findNextStepInPathFromTo(fx, fy, tx, ty int) (int, int) {
 	path := l.pathfinder.FindPath(&costmap, 1+2*fx, 1+2*fy, 1+2*tx, 1+2*ty)
 	return path.GetNextStepVector()
 }
-
-//func (l *level) drawPFMap() {
-//	costMap := l.createPathfindingCostMap()
-//	cw.SetFgColor(cw.GREEN)
-//	for x := range costMap {
-//		for y := range costMap[x] {
-//			cw.PutString(strconv.Itoa(costMap[x][y]), rend.roomSizeX*4+1+x, y)
-//		}
-//	}
-//	cw.Flush_console()
-//}

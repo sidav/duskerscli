@@ -1,10 +1,15 @@
 package main
 
 type room struct {
-	name string
+	name                 string
 	isExplored           bool
 	isSeenRightNow       bool
 	isUnderMotionScanner bool
+
+	powerGenNumber       int
+	isPowered            bool
+	securityNumber       int
+
 	conns                [2]*connection // either to down or to right
 }
 

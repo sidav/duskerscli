@@ -55,7 +55,7 @@ func initLevel() *level {
 		}
 	}
 
-	_, srx, sry := lvl.getRandomRoomInRange(0, 0, 1, 1)
+	_, srx, sry := lvl.getRandomRoomInRange(-1, 0, 0, 1, 1)
 
 	lvl.actors = append(lvl.actors, &actor{
 		name:               "Alpha",
@@ -110,7 +110,7 @@ func initLevel() *level {
 	)
 
 	for i := 0; i < 8; i++ {
-		_, x, y := lvl.getRandomRoomExceptForRange(0, 0, 1, 1)
+		_, x, y := lvl.getRandomRoomExceptForRange(-1, 0, 0, 1, 1)
 		lvl.actors = append(lvl.actors, &actor{
 			staticId:           ACTOR_MUTANT,
 			hp:                 1,
@@ -155,18 +155,21 @@ func initLevel() *level {
 	return lvl
 }
 
-func (l *level) getRandomRoomInRange(fx, fy, tx, ty int) (*room, int, int) {
+func (l *level) getRandomRoomInRange(desiredSecurityNumber, fx, fy, tx, ty int) (*room, int, int) {
 	for try := 0; try < 25; try++ {
 		x := rnd.RandInRange(fx, tx)
 		y := rnd.RandInRange(fy, ty)
 		if l.rooms[x][y] != nil {
+			if desiredSecurityNumber != -1 && l.rooms[x][y].securityNumber != desiredSecurityNumber {
+				continue
+			}
 			return l.rooms[x][y], x, y
 		}
 	}
 	panic("GetRandomRoom failed!")
 }
 
-func (l *level) getRandomRoomExceptForRange(fx, fy, tx, ty int) (*room, int, int) {
+func (l *level) getRandomRoomExceptForRange(desiredSecurityNumber, fx, fy, tx, ty int) (*room, int, int) {
 	for try := 0; try < 25; try++ {
 		x := rnd.Rand(len(l.rooms))
 		y := rnd.Rand(len(l.rooms[0]))
@@ -174,8 +177,14 @@ func (l *level) getRandomRoomExceptForRange(fx, fy, tx, ty int) (*room, int, int
 			continue
 		}
 		if l.rooms[x][y] != nil {
+			if desiredSecurityNumber != -1 && l.rooms[x][y].securityNumber != desiredSecurityNumber {
+				continue
+			}
 			return l.rooms[x][y], x, y
 		}
 	}
 	panic("GetRandomRoom failed!")
+}
+
+func (l *level) randomFloodFillSecurities(totalNum int) {
 }
