@@ -42,7 +42,7 @@ func (m *module) applyModuleEffect(user *actor, me *moduleEffect) {
 		user.acquireEnergy(1)
 	case EFFECT_NETWORK_CONNECTION:
 		if CURR_LEVEL.hasFacilityAtCoords(FACILITY_INTERFACE, user.x, user.y) {
-			CURR_LEVEL.showNetworkTerminal()
+			CURR_LEVEL.showNetworkTerminal(user.x, user.y)
 		} else {
 			CURR_LEVEL.appendToLogMessage("But this room has no network interface!")
 		}
@@ -50,7 +50,7 @@ func (m *module) applyModuleEffect(user *actor, me *moduleEffect) {
 	case EFFECT_SIMPLE_ATTACK:
 		actrs := CURR_LEVEL.getAllActorsAtCoords(user.x, user.y)
 		for _, target := range actrs {
-			if !target.isPlayerControlled {
+			if !target.isPlayerControlled && target.asFacility == nil {
 				target.hp -= me.damage
 				CURR_LEVEL.appendToLogMessage("%s: opening fire at %s. ", user.getName(), target.getName())
 				break

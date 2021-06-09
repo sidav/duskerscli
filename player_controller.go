@@ -16,6 +16,14 @@ func (p *playerController) parsePlayerInput(inputString string) {
 	splitted := strings.Split(inputString, " ")
 	// spLen := len(splitted)
 	switch splitted[0] {
+	case "survey":
+		for x := range CURR_LEVEL.rooms {
+			for y := range CURR_LEVEL.rooms[x] {
+				if CURR_LEVEL.rooms[x][y] != nil {
+					CURR_LEVEL.rooms[x][y].isExplored = true
+				}
+			}
+		}
 	case "move", "navigate", "na":
 		actor := CURR_LEVEL.getActorByName(splitted[1])
 		if actor == nil {

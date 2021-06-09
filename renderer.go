@@ -92,7 +92,6 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 		// render connections
 		roomCentX := upx + r.roomSizeX/2 - 1
 		roomCentY := upy + r.roomSizeY/2 - 1
-		cw.SetFgColor(cw.DARK_MAGENTA)
 		for _, c := range room.conns {
 			r.renderConnectionForRoomCenterCoords(c, roomCentX, roomCentY, false)
 		}
@@ -101,26 +100,25 @@ func (r *renderer) renderRoomAt(l *level, rx, ry int) {
 		r.renderConnectionForRoomCenterCoords(l.getConnBetweenRoomsAtCoords(rx, ry, rx, ry-1), roomCentX, roomCentY, true)
 	}
 	actorsHere := l.getAllActorsAtCoords(rx, ry)
-	if room.isSeenRightNow {
-		// render actors
-		playersActors := 0
-		enemiesActors := 0
-		facilities := 0
-		for _, a := range actorsHere {
-			if a.asFacility != nil {
-				cw.PutChar(a.getAppearanceChar(), upx+facilities, upy+roomInnerSizeY-1)
-				facilities++
-			} else if a.isPlayerControlled {
-				cw.SetFgColor(cw.DARK_GREEN)
-				cw.PutChar(a.getAppearanceChar(), upx+playersActors, upy)
-				playersActors++
-			} else {
-				cw.SetFgColor(cw.RED)
-				cw.PutChar(a.getAppearanceChar(), upx+roomInnerSizeX-enemiesActors-1, upy+1)
-				enemiesActors++
-			}
+	// render actors
+	playersActors := 0
+	enemiesActors := 0
+	facilities := 0
+	for _, a := range actorsHere {
+		if a.asFacility != nil && room.isExplored {
+			cw.PutChar(a.getAppearanceChar(), upx+facilities, upy+roomInnerSizeY-1)
+			facilities++
+		} else if a.isPlayerControlled {
+			cw.SetFgColor(cw.DARK_GREEN)
+			cw.PutChar(a.getAppearanceChar(), upx+playersActors, upy)
+			playersActors++
+		} else if room.isSeenRightNow {
+			cw.SetFgColor(cw.RED)
+			cw.PutChar(a.getAppearanceChar(), upx+roomInnerSizeX-enemiesActors-1, upy+1)
+			enemiesActors++
 		}
-	} else if room.isUnderMotionScanner {
+	}
+	if room.isUnderMotionScanner {
 		cw.SetFgColor(cw.RED)
 		cw.PutString(strconv.Itoa(len(actorsHere)), upx+roomInnerSizeX/2, upy+1)
 	}
@@ -134,10 +132,10 @@ func (r *renderer) printRoomLetterCoordsAtRoom(l *level, rx, ry int) {
 		cw.SetColor(cw.DARK_GRAY, cw.BLACK)
 	}
 	letter := string(rune('A' + rx))
-	number := strconv.Itoa(ry+1)
+	number := strconv.Itoa(ry + 1)
 	roomCentX := 1 + rx*r.roomSizeX + r.roomSizeX/2 - 1
 	roomCentY := 1 + ry*r.roomSizeY + r.roomSizeY/2 - 1
-	if r.roomSizeX % 2 != 0 {
+	if r.roomSizeX%2 != 0 {
 		cw.PutString(letter+number, roomCentX, roomCentY)
 	} else {
 		cw.PutString(letter+"-"+number, roomCentX-1, roomCentY)
@@ -150,11 +148,16 @@ func (r *renderer) renderConnectionForRoomCenterCoords(c *connection, rx, ry int
 		return
 	}
 	chr := '+'
+	cw.SetFgColor(cw.DARK_MAGENTA)
 	if c.isOpened {
 		chr = '\''
+	} else if c.isLocked {
+		chr = '='
+		cw.SetFgColor(cw.DARK_RED)
 	}
 	if c.isBroken {
 		chr = '\\'
+		cw.SetFgColor(cw.DARK_GRAY)
 	}
 	if reverse {
 		cw.PutChar(chr, rx-c.rcx*(r.roomSizeX/2), ry-c.rcy*r.roomSizeY/2)
